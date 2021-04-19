@@ -1,0 +1,85 @@
+﻿@model Recruitment.CandidateViewModel
+
+<div>
+    <form id="myForm" method="post">
+
+        @Html.HiddenFor(m => m.CandidateId)
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>Vị trí</label>
+                @Html.DropDownListFor(model => model.PositionId, ViewBag.PositionList as SelectList, "-- Select --", new { @class = "form-control" })
+            </div>
+
+            <div class="form-group col-md-6">
+                <label>Chức danh</label>
+                @Html.DropDownListFor(model => model.LevelId, ViewBag.LevelList as SelectList, "-- Select --", new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>Import CV</label>
+                <div class="custom-file">
+                    <input type="file" name="CV" class="custom-file-input" id="myInput" aria-describedby="myInput">
+                    <label class="custom-file-label" for="myInput">Choose file</label>
+                </div>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label>Người giới thiệu</label>
+                @Html.TextBoxFor(model => model.IntroduceName, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputName">Họ tên</label>
+                @Html.TextBoxFor(model => model.FullName, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputPhone">Phone</label>
+                @Html.TextBoxFor(model => model.Phone, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputBirthday">Birthday</label>
+                @Html.TextBoxFor(model => model.Birthday, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputEmail">Email</label>
+                @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="inputAddress">Address</label>
+                @Html.TextBoxFor(model => model.Address, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="text-center">
+
+            <button type="submit" class="btn btn-primary" id="btnSubmit">
+                @if (Model.CandidateId > 0)
+                {
+                    <span>Update</span>
+                }
+                else
+                {
+                    <span>Import</span>
+                }
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+        var fileName = document.getElementById("myInput").files[0].name;
+        var nextSibling = e.target.nextElementSibling
+        nextSibling.innerText = fileName
+    })
+</script>
