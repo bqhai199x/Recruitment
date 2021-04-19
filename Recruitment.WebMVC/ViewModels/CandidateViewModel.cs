@@ -1,4 +1,7 @@
-﻿namespace Recruitment
+﻿using Recruitment.Core;
+using System;
+
+namespace Recruitment
 {
     public class CandidateViewModel
     {
@@ -25,5 +28,19 @@
         public string LevelName { get; set; }
 
         public string PositionName { get; set; }
+
+        public bool IsApplied { get; set; }
+
+        public Contact IsContact { get; set; }
+
+        public DateTime? InterviewTime { get; set; }
+
+        public string InterviewLocation { get; set; }
+
+        public string Note { get; set; }
+
+        public int? TestPoint { get; set; }
+
+        public Status Status { get; set; }
     }
 }

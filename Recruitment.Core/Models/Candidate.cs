@@ -1,5 +1,7 @@
-namespace Recruitment.Core
+﻿namespace Recruitment.Core
 {
+    using System;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -27,6 +29,20 @@ namespace Recruitment.Core
         public string CV { get; set; }
 
         public string IntroduceName { get; set; }
+
+        public bool IsApplied { get; set; }
+
+        public Contact IsContact { get; set; }
+
+        public DateTime? InterviewTime { get; set; }
+
+        public string InterviewLocation { get; set; }
+
+        public string Note { get; set; }
+
+        public int? TestPoint { get; set; }
+
+        public Status Status { get; set; }
 
         [ForeignKey("LevelId")]
         public virtual Level Level { get; set; }

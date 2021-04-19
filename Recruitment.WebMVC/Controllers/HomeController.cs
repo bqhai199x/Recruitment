@@ -26,7 +26,9 @@ namespace CandidateMGMT.Controllers
                     Phone = x.Phone,
                     Email = x.Email,
                     IntroduceName = x.IntroduceName,
-                    CV = x.CV
+                    CV = x.CV,
+                    IsApplied = x.IsApplied,
+                    Status = x.Status
                 })
                 .ToList();
 

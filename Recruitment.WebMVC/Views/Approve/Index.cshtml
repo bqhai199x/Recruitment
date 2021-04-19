@@ -1,0 +1,92 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@model Recruitment.CandidateViewModel
+
+@{
+    ViewBag.Title = "Trang chủ";
+    int stt = 1;
+}
+
+
+<form action="/Home/Index/">
+    <div class="input-group w-25 py-3">
+        <input type="text" class="form-control" placeholder="Tìm kiếm ứng viên" name="namestr">
+        <div class="input-group-append">
+            <button class="btn btn-secondary" type="submit">
+                Tìm kiếm
+            </button>
+        </div>
+    </div>
+</form>
+
+<form action="/Home/Index/">
+    <div class="form-row w-25">
+        <div class="form-group col-md-6">
+            <label>Vị trí</label>
+            @Html.DropDownListFor(model => model.PositionId, ViewBag.PositionList as SelectList, "-- Select --", new { @class = "form-control" })
+        </div>
+
+        <div class="form-group col-md-6">
+            <label>Chức danh</label>
+            @Html.DropDownListFor(model => model.LevelId, ViewBag.LevelList as SelectList, "-- Select --", new { @class = "form-control" })
+        </div>
+    </div>
+
+    <button type="reset" class="btn btn-primary">Đặt lại</button>
+    <button type="submit" class="btn btn-secondary">Tìm kiếm</button>
+</form>
+
+<!-- List candidate -->
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr class="text-center bg-secondary text-white">
+            <th scope="col">STT</th>
+            <th scope="col">Họ tên</th>
+            <th scope="col">Vị trí</th>
+            <th scope="col">Chức danh</th>
+            <th scope="col">Ngày sinh</th>
+            <th scope="col">Địa chỉ</th>
+            <th scope="col">Nguồn</th>
+            <th scope="col">Đã từng apply</th>
+            <th scope="col">Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.CandidateList)
+        {
+            <tr>
+                <td class="text-center">@stt</td> @{stt++;}
+                <td>@item.FullName</td>
+                <td>@item.PositionName</td>
+                <td>@item.LevelName</td>
+                <td>@item.Birthday</td>
+                <td>@item.Address</td>
+                <td>@item.IntroduceName</td>
+                <td>
+                @if(item.IsApplied == true)
+                {
+                    <span>CV không được duyệt</span>
+                }
+                 </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-success btn-sm">Xem CV</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@*<script>
+
+    var AddOrEdit = function (candidateId) {
+
+        var url = "/Home/AddOrEdit?CandidateId=" + candidateId;
+
+        $("#myModalBodyDiv1").load(url, function () {
+            $("#myModal1").modal("show");
+        })
+    }
+</script>*@
+
