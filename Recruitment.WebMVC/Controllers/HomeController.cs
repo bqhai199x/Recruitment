@@ -47,6 +47,15 @@ namespace CandidateMGMT.Controllers
         {
             try
             {
+                var f = Request.Files["CV"];
+                if (f != null && f.ContentLength > 0)
+                {
+                    string FileName = System.IO.Path.GetFileName(f.FileName);
+                    string UploadPath = Server.MapPath("~/wwwroot/CV/" + FileName);
+                    f.SaveAs(UploadPath);
+                    model.CV = FileName;
+                }
+
                 if (model.CandidateId > 0)
                 {
                     //Update
@@ -99,7 +108,6 @@ namespace CandidateMGMT.Controllers
             CandidateViewModel model = new CandidateViewModel();
             if (CandidateId > 0)
             {
-
                 Candidate emp = db.Candidate.FirstOrDefault(x => x.CandidateId == CandidateId);
                 model.CandidateId = emp.CandidateId;
                 model.LevelId = emp.LevelId;

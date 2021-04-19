@@ -22,6 +22,7 @@
             <div class="modal-body" id="myModalBodyDiv1">
 
             </div>
+            
         </div>
     </div>
 </div>
@@ -66,7 +67,9 @@
                 <td>@item.Phone</td>
                 <td>@item.Email</td>
                 <td>@item.IntroduceName</td>
-                <td>@item.CV</td>
+                <td>
+                    <a href="~/wwwroot/CV/@item.CV">@item.CV</a>
+                </td>
                 <td>
                     <button type="button" onclick="AddOrEdit(@item.CandidateId)" class="btn btn-outline-success btn-sm">Sửa</button>&nbsp;
                     <button type="button" onclick="location.href='/Home/Delete/@item.CandidateId'" class="btn btn-outline-success btn-sm">Xoá</button>

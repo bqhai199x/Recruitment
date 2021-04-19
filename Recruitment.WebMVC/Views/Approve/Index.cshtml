@@ -1,8 +1,4 @@
-﻿@{
-    ViewBag.Title = "Index";
-}
-
-@model Recruitment.CandidateViewModel
+﻿@model Recruitment.CandidateViewModel
 
 @{
     ViewBag.Title = "Trang chủ";
@@ -65,28 +61,37 @@
                 <td>@item.Address</td>
                 <td>@item.IntroduceName</td>
                 <td>
-                @if(item.IsApplied == true)
-                {
-                    <span>CV không được duyệt</span>
-                }
-                 </td>
+                    @if (item.IsApplied == true)
+                    {
+                        <span>CV không được duyệt</span>
+                    }
+                </td>
                 <td class="text-center">
-                    <button type="button" class="btn btn-success btn-sm">Xem CV</button>
+                    <button type="button" class="btn btn-success btn-sm" onclick="ShowCV(@item.CandidateId)">Xem CV</button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
-@*<script>
+<!-- Modal -->
+<div class="modal fade" id="myModal1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content" id="myModalBodyDiv1">
 
-    var AddOrEdit = function (candidateId) {
+        </div>
+    </div>
+</div>
 
-        var url = "/Home/AddOrEdit?CandidateId=" + candidateId;
+<script>
+
+    var ShowCV = function (candidateId) {
+
+        var url = "/Approve/ShowCV?CandidateId=" + candidateId;
 
         $("#myModalBodyDiv1").load(url, function () {
             $("#myModal1").modal("show");
         })
     }
-</script>*@
+</script>
 

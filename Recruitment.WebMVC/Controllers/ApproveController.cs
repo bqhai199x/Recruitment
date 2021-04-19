@@ -41,5 +41,13 @@ namespace Recruitment.WebMVC.Controllers
 
             return View();
         }
+
+        public ActionResult ShowCV(int CandidateId) 
+        {
+            Candidate emp = db.Candidate.FirstOrDefault(x => x.CandidateId == CandidateId);
+            ViewBag.CV = emp.CV;
+            ViewBag.Name = emp.FullName;
+            return PartialView("_ShowCV");
+        }
     }
 }
