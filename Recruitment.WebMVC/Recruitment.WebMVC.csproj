@@ -224,6 +224,7 @@
     <Compile Include="App_Start\DatabaseSetup.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ApproveController.cs" />
+    <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -238,6 +239,7 @@
     <Content Include="Scripts\jquery-3.0.0.min.map" />
     <Content Include="Views\Approve\Index.cshtml" />
     <Content Include="Views\Approve\_ShowCV.cshtml" />
+    <Content Include="Views\Contact\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

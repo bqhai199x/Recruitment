@@ -51,9 +51,11 @@ namespace CandidateMGMT.Controllers
                 if (f != null && f.ContentLength > 0)
                 {
                     string FileName = System.IO.Path.GetFileName(f.FileName);
+                    bool isPDF = System.IO.Path.GetExtension(f.FileName.ToLower()).Equals(".pdf") ? true : false;
                     string UploadPath = Server.MapPath("~/wwwroot/CV/" + FileName);
                     f.SaveAs(UploadPath);
                     model.CV = FileName;
+                    model.IsPDF = isPDF;
                 }
 
                 if (model.CandidateId > 0)
@@ -70,6 +72,7 @@ namespace CandidateMGMT.Controllers
                     emp.Email = model.Email;
                     emp.IntroduceName = model.IntroduceName;
                     emp.CV = model.CV;
+                    emp.IsPDF = model.IsPDF;
                     db.SaveChanges();
                 }
                 else
@@ -85,6 +88,7 @@ namespace CandidateMGMT.Controllers
                     emp.Email = model.Email;
                     emp.IntroduceName = model.IntroduceName;
                     emp.CV = model.CV;
+                    emp.IsPDF = model.IsPDF;
                     db.Candidate.Add(emp);
                     db.SaveChanges();
 
@@ -119,6 +123,7 @@ namespace CandidateMGMT.Controllers
                 model.Email = emp.Email;
                 model.IntroduceName = emp.IntroduceName;
                 model.CV = emp.CV;
+                emp.IsPDF = model.IsPDF;
             }
             return PartialView("_Modal", model);
         }

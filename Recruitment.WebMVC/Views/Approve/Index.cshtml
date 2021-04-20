@@ -6,9 +6,9 @@
 }
 
 
-<form action="/Home/Index/">
+<form action="/Approve/Index/">
     <div class="input-group w-25 py-3">
-        <input type="text" class="form-control" placeholder="Nhập từ khoá" name="namestr">
+        <input type="text" class="form-control" placeholder="Nhập từ khoá" name="searchstr">
         <div class="input-group-append">
             <button class="btn btn-success" type="submit">
                 Tìm kiếm
@@ -17,7 +17,7 @@
     </div>
 </form>
 
-<form action="/Home/Index/">
+<form action="/Approve/Index/">
     <div class="form-row w-25">
         <div class="form-group col-md-6">
             <label>Vị trí</label>
@@ -39,9 +39,9 @@
     <thead>
         <tr class="text-center bg-secondary text-white">
             <th scope="col">STT</th>
-            <th scope="col">Họ tên</th>
-            <th scope="col">Vị trí</th>
-            <th scope="col">Chức danh</th>
+            <th scope="col" onclick="location.href='/Approve/Index?sortOrder=@ViewBag.SortByName'">Họ tên</th>
+            <th scope="col" onclick="location.href='/Approve/Index?sortOrder=@ViewBag.SortByPosition'">Vị trí</th>
+            <th scope="col" onclick="location.href='/Approve/Index?sortOrder=@ViewBag.SortByLevel'">Chức danh</th>
             <th scope="col">Ngày sinh</th>
             <th scope="col">Địa chỉ</th>
             <th scope="col">Nguồn</th>
@@ -61,13 +61,84 @@
                 <td>@item.Address</td>
                 <td>@item.IntroduceName</td>
                 <td>
-                    @if (item.IsApplied == true)
+                    @switch (item.IsApplied)
                     {
-                        <span>CV không được duyệt</span>
+                        case 0:
+                            {
+                                <span>CV Không được duyệt</span>
+                                break;
+                            }
+                        case 2:
+                            {
+                                <span>Duyệt CV</span>
+                                break;
+                            }
+                        case 3:
+                            {
+                                <span>Mời test</span>
+                                break;
+                            }
+                        case 4:
+                            {
+                                <span>Test Ok</span>
+                                break;
+                            }
+                        case 5:
+                            {
+                                <span>Mời PV V1</span>
+                                break;
+                            }
+                        case 7:
+                            {
+                                <span>Pass V1</span>
+                                break;
+                            }
+                        case 8:
+                            {
+                                <span>Mời PV V2</span>
+                                break;
+                            }
+                        case 9:
+                            {
+                                <span>Pass V2</span>
+                                break;
+                            }
+                        case 10:
+                            {
+                                <span>Đã gửi offer</span>
+                                break;
+                            }
+                        case 11:
+                            {
+                                <span>Đã nhận offer</span>
+                                break;
+                            }
+                        case 12:
+                            {
+                                <span>Đã gửi form</span>
+                                break;
+                            }
+                        case 13:
+                            {
+                                <span>All OK</span>
+                                break;
+                            }
+                        default: break;
                     }
+
+
                 </td>
                 <td class="text-center">
-                    <button type="button" class="btn btn-success btn-sm" onclick="ShowCV(@item.CandidateId)">Xem CV</button>
+                    @if (item.IsPDF)
+                    {
+                        <button type="button" class="btn btn-success btn-sm" onclick="ShowCV(@item.CandidateId)">Xem CV</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-info btn-sm" onclick="location.href='../wwwroot/CV/@item.CV'">Tải CV</button>
+                        <button type="button" class="btn btn-success btn-sm" onclick="location.href = '/Approve/ApplyCV?candidateId=@item.CandidateId&apply=1'">Duyệt</button>
+                        <button type="button" class="btn btn-danger btn-sm" onclick="location.href = '/Approve/ApplyCV?candidateId=@item.CandidateId&apply=0'">Loại</button>
+                    }
                 </td>
             </tr>
         }

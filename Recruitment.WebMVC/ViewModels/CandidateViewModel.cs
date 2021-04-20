@@ -23,15 +23,17 @@ namespace Recruitment
 
         public string CV { get; set; }
 
+        public bool IsPDF { get; set; }
+
         public string IntroduceName { get; set; }
 
         public string LevelName { get; set; }
 
         public string PositionName { get; set; }
 
-        public bool IsApplied { get; set; }
+        public int? IsApplied { get; set; }
 
-        public Contact IsContact { get; set; }
+        public bool? IsContacted { get; set; }
 
         public DateTime? InterviewTime { get; set; }
 
@@ -41,6 +43,6 @@ namespace Recruitment
 
         public int? TestPoint { get; set; }
 
-        public Status Status { get; set; }
+        public int Status { get; set; }
     }
 }

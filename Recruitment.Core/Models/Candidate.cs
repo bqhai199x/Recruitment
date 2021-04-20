@@ -27,12 +27,16 @@
         public string Email { get; set; }
 
         public string CV { get; set; }
+        
+        public bool IsPDF { get; set; }
 
         public string IntroduceName { get; set; }
 
-        public bool IsApplied { get; set; }
+        [DefaultValue(null)]
+        public int? IsApplied { get; set; }
 
-        public Contact IsContact { get; set; }
+        [DefaultValue(null)]
+        public bool? IsContacted { get; set; }
 
         public DateTime? InterviewTime { get; set; }
 
@@ -42,7 +46,8 @@
 
         public int? TestPoint { get; set; }
 
-        public Status Status { get; set; }
+        [DefaultValue(0)]
+        public int Status { get; set; }
 
         [ForeignKey("LevelId")]
         public virtual Level Level { get; set; }

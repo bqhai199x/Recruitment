@@ -5,7 +5,7 @@
 }
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" onclick="AddOrEdit(0)">
+<button type="button" class="btn btn-success" onclick="AddOrEdit(0)">
     Thêm ứng viên
 </button>
 
@@ -33,7 +33,7 @@
     <div class="input-group w-25 py-3">
     <input type="text" class="form-control" placeholder="Tìm kiếm ứng viên" name="namestr">
     <div class="input-group-append">
-        <button class="btn btn-secondary" type="submit">
+        <button class="btn btn-success" type="submit">
             Tìm kiếm
         </button>
     </div>
@@ -71,8 +71,8 @@
                     <a href="~/wwwroot/CV/@item.CV">@item.CV</a>
                 </td>
                 <td>
-                    <button type="button" onclick="AddOrEdit(@item.CandidateId)" class="btn btn-outline-success btn-sm">Sửa</button>&nbsp;
-                    <button type="button" onclick="location.href='/Home/Delete/@item.CandidateId'" class="btn btn-outline-success btn-sm">Xoá</button>
+                    <button type="button" onclick="AddOrEdit(@item.CandidateId)" class="btn btn-success btn-sm">Sửa</button>&nbsp;
+                    <button type="button" onclick="location.href='/Home/Delete/@item.CandidateId'" class="btn btn-danger btn-sm">Xoá</button>
                 </td>
             </tr>
         }

@@ -53,16 +53,14 @@
   <ItemGroup>
     <Compile Include="Data\CandidateDbContext.cs" />
     <Compile Include="Data\DbInitializer.cs" />
-    <Compile Include="Migrations\202104190941453_ConvertStatusToEnum.cs" />
-    <Compile Include="Migrations\202104190941453_ConvertStatusToEnum.designer.cs">
-      <DependentUpon>202104190941453_ConvertStatusToEnum.cs</DependentUpon>
+    <Compile Include="Migrations\202104200317097_CreateDatabase.cs" />
+    <Compile Include="Migrations\202104200317097_CreateDatabase.designer.cs">
+      <DependentUpon>202104200317097_CreateDatabase.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Candidate.cs" />
-    <Compile Include="enum\Contact.cs" />
     <Compile Include="Models\Level.cs" />
     <Compile Include="Models\Position.cs" />
-    <Compile Include="enum\Status.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -70,8 +68,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202104190941453_ConvertStatusToEnum.resx">
-      <DependentUpon>202104190941453_ConvertStatusToEnum.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202104200317097_CreateDatabase.resx">
+      <DependentUpon>202104200317097_CreateDatabase.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

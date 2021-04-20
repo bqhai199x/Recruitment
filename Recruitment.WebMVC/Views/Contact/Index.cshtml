@@ -1,0 +1,256 @@
+﻿@model Recruitment.CandidateViewModel
+
+@{
+    ViewBag.Title = "Index";
+    int stt = 1;
+}
+
+<form action="/Contact/Index/">
+    <div class="input-group w-25 py-3">
+        <input type="text" class="form-control" placeholder="Nhập từ khoá" name="searchstr">
+        <div class="input-group-append">
+            <button class="btn btn-success" type="submit">
+                Tìm kiếm
+            </button>
+        </div>
+    </div>
+</form>
+
+<form action="/Contact/Index/">
+    <div class="form-row w-75">
+        <div class="form-group col-md-2">
+            <label>Vị trí</label>
+            @Html.DropDownListFor(model => model.PositionId, ViewBag.PositionList as SelectList, "-- Select --", new { @class = "form-control" })
+        </div>
+
+        <div class="form-group col-md-2">
+            <label>Chức danh</label>
+            @Html.DropDownListFor(model => model.LevelId, ViewBag.LevelList as SelectList, "-- Select --", new { @class = "form-control" })
+        </div>
+
+        <div class="form-group col-md-2">
+            <label>Liên hệ</label>
+            <select class="form-control">
+                <option>-- Select --</option>
+                <option>Chưa liên hệ</option>
+                <option>Đã liên hệ</option>
+                <option>Không liên hệ được</option>
+            </select>
+        </div>
+
+        <div class="form-group col-md-2">
+            <label>PV từ ngày</label>
+            <input type="date" class="form-control" />
+        </div>
+
+        <div class="form-group col-md-2">
+            <label>PV đến ngày</label>
+            <input type="date" class="form-control" />
+        </div>
+
+        <div class="form-group col-md-2">
+            <label>Trạng thái</label>
+            <select class="form-control" name="Status">
+                <option>-- Select --</option>
+                <option value="2">Duyệt CV</option>
+                <option value="3">Mời test</option>
+                <option value="4">Test OK</option>
+                <option value="5">Mời PV V1</option>
+                <option value="6">Pass V1</option>
+                <option value="7">Mời PV V2</option>
+                <option value="8">Pass V2</option>
+                <option value="9">Đã gửi offer</option>
+                <option value="10">Đã nhận offer</option>
+                <option value="11">Từ chối offer</option>
+                <option value="12">Đã gửi form</option>
+                <option value="13">All OK</option>
+            </select>
+        </div>
+    </div>
+    <button type="reset" class="btn btn-success">Đặt lại</button>&nbsp;&nbsp;
+    <button type="submit" class="btn btn-success">Tìm kiếm</button>
+</form>
+
+<!-- List candidate -->
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr class="text-center bg-secondary text-white">
+            <th scope="col">STT</th>
+            <th scope="col">Họ tên</th>
+            <th scope="col">Vị trí</th>
+            <th scope="col">Chức danh</th>
+            <th scope="col">Email</th>
+            <th scope="col">Số điện thoại</th>
+            <th scope="col">Liên hệ</th>
+            <th scope="col">Thời gian PV</th>
+            <th scope="col">Địa điểm PV</th>
+            <th scope="col">Ghi chú</th>
+            <th scope="col">Trạng thái</th>
+            <th scope="col">Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.CandidateList)
+        {
+            <tr>
+                <td class="text-center">@stt</td> @{stt++;}
+                <td>@item.FullName</td>
+                <td>@item.PositionName</td>
+                <td>@item.LevelName</td>
+                <td>@item.Phone</td>
+                <td>@item.Email</td>
+                <td>
+                    @if (item.IsContacted == null)
+                    {
+
+                    }
+                    else if (item.IsContacted)
+                    {
+                        <span>Đã liên hệ</span>
+                    }
+                    else if (!item.IsContacted)
+                    {
+                        <span>Không liên hệ được</span>
+                    }
+                </td>
+                <td>@item.InterviewTime</td>
+                <td>@item.InterviewLocation</td>
+                <td>@item.Note</td>
+                @switch (item.Status)
+                {
+                    case 2:
+                        {
+                            <td>Duyệt CV</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-info btn-sm" onclick="AddOrEdit()">Lịch test</button>
+                            </td>
+                            break;
+                        }
+                    case 3:
+                        {
+                            <td>Mời test</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-info btn-sm">Ok</button>
+                            </td>
+                            break;
+                        }
+                    case 4:
+                        {
+                            <td>Test OK</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-info btn-sm">Phỏng vấn V1</button>
+                            </td>
+                            break;
+                        }
+                    case 5:
+                        {
+                            <td>Mời PV V1</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-info btn-sm">Ok</button>
+                            </td>
+                            break;
+                        }
+                    case 6:
+                        {
+                            <td>Pass V1</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-info btn-sm">Phỏng vấn V2</button>
+                            </td>
+                            break;
+                        }
+                    case 7:
+                        {
+                            <td>Mời PV V2</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-info btn-sm">Ok</button>
+                            </td>
+                            break;
+                        }
+                    case 8:
+                        {
+                            <td>Pass V2</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-info btn-sm">Gửi offer</button>
+                            </td>
+                            break;
+                        }
+                    case 9:
+                        {
+                            <td>Đã gửi offer</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-info btn-sm">Ok</button>
+                            </td>
+                            break;
+                        }
+                    case 10:
+                        {
+                            <td>Đã nhận offer</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-info btn-sm">Gửi form</button>
+                            </td>
+                            break;
+                        }
+                    case 11:
+                        {
+                            <td>Từ chối offer</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-info btn-sm">Ok</button>
+                            </td>
+                            break;
+                        }
+                    case 12:
+                        {
+                            <td>Đã gửi form</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-info btn-sm">OK</button>
+                            </td>
+                            break;
+                        }
+                    case 13:
+                        {
+                            <td>All OK</td>
+                            <td class="text-center">
+                            </td>
+                            break;
+                        }
+                    default:
+                        {
+                            <td>All OK</td>
+                            <td class="text-center">
+                            </td>
+                            break;
+                        }
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Lịch phỏng vấn</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="myModalBodyDiv1">
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    var AddOrEdit = function (candidateId) {
+
+        var url = "/Contact/AddOrEdit?CandidateId=" + candidateId;
+
+        $("#myModalBodyDiv1").load(url, function () {
+            $("#myModal1").modal("show");
+        })
+    }
+</script>

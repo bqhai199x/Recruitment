@@ -7,13 +7,13 @@ namespace Recruitment.Core.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class ConvertStatusToEnum : IMigrationMetadata
+    public sealed partial class CreateDatabase : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ConvertStatusToEnum));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(CreateDatabase));
         
         string IMigrationMetadata.Id
         {
-            get { return "202104190941453_ConvertStatusToEnum"; }
+            get { return "202104200317097_CreateDatabase"; }
         }
         
         string IMigrationMetadata.Source

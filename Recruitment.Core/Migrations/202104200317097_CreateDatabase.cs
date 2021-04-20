@@ -3,7 +3,7 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class ConvertStatusToEnum : DbMigration
+    public partial class CreateDatabase : DbMigration
     {
         public override void Up()
         {
@@ -20,9 +20,10 @@
                         Phone = c.String(),
                         Email = c.String(),
                         CV = c.String(),
+                        IsPDF = c.Boolean(nullable: false),
                         IntroduceName = c.String(),
-                        IsApplied = c.Boolean(nullable: false),
-                        IsContact = c.Int(nullable: false),
+                        IsApplied = c.Int(defaultValue: null),
+                        IsContacted = c.Boolean(defaultValue: null),
                         InterviewTime = c.DateTime(),
                         InterviewLocation = c.String(),
                         Note = c.String(),
