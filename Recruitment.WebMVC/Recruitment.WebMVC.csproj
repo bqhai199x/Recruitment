@@ -240,6 +240,7 @@
     <Content Include="Views\Approve\Index.cshtml" />
     <Content Include="Views\Approve\_ShowCV.cshtml" />
     <Content Include="Views\Contact\Index.cshtml" />
+    <Content Include="Views\Contact\_Schedule.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

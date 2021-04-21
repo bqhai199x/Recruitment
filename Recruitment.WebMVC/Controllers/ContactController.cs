@@ -50,5 +50,40 @@ namespace Recruitment.WebMVC.Controllers
             return View();
 
         }
+
+        public ActionResult ScheduleView(int CandidateId)
+        {
+            var candi = db.Candidate.Find(CandidateId);
+            var model = new CandidateViewModel();
+            {
+                model.CandidateId = candi.CandidateId;
+                model.InterviewTime = candi.InterviewTime;
+                model.InterviewLocation = candi.InterviewLocation;
+                model.Note = candi.Note;
+            }
+            return PartialView("_Schedule", model);
+        }
+
+        public ActionResult Schedule(CandidateViewModel model)
+        {
+            var candi = db.Candidate.Find(model.CandidateId);
+            candi.InterviewTime = model.InterviewTime;
+            candi.InterviewLocation = model.InterviewLocation;
+            candi.Note = model.Note;
+            candi.IsContacted = true;
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult NotBeContacted(int CandidateId)
+        {
+            var candi = db.Candidate.Find(CandidateId);
+            candi.InterviewTime = null;
+            candi.InterviewLocation = null;
+            candi.Note = null;
+            candi.IsContacted = false;
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }
