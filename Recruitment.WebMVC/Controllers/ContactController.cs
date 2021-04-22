@@ -155,5 +155,57 @@ namespace Recruitment.WebMVC.Controllers
                 throw ex;
             }
         }
+
+        public ActionResult SendMulti(int[] CandidateId)
+        {
+            try
+            {
+                string senderEmail = System.Configuration.ConfigurationManager.AppSettings["SenderEmail"].ToString();
+                string senderPassword = System.Configuration.ConfigurationManager.AppSettings["SenderPassword"].ToString();
+
+                SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
+                client.EnableSsl = true;
+                client.Timeout = 100000;
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.UseDefaultCredentials = false;
+                client.Credentials = new NetworkCredential(senderEmail, senderPassword);
+
+                var emplst = new List<Candidate>();
+                for (int i = 0; i < CandidateId.Length; i++)
+                {
+                    emplst.Add(db.Candidate.Find(CandidateId[i]));
+                }
+                var n = Environment.NewLine;
+                foreach (var item in emplst)
+                {
+                    MailMessage mailMessage = new MailMessage();
+                    mailMessage.From = new MailAddress(senderEmail);
+                    mailMessage.To.Add(item.Email);
+                    mailMessage.Bcc.Add(item.Employee.FullName);
+                    mailMessage.Subject = item.LevelId == 1 ? "Saishunkan System Vietnam_Thư mời test" : "Vòng 1 - Saishunkan System Vietnam_Thư mời phỏng vấn";
+                    mailMessage.Body =
+                        ($"Chào bạn {item.FullName},{n}" +
+                        $"{n}" +
+                        $"Chúng tôi là phụ trách nhân sự công ty Saishunkan System Vietnam.{n}" +
+                        $"Cảm ơn bạn đã nộp hồ sơ ứng tuyển vị trí {item.Level.LevelName} {item.Position.PositionName} cho chúng tôi.{n}" +
+                        $"{n}" +
+                        $"Bên chúng tôi có kế hoạch phỏng vấn vào thời gian và địa điểm như sau:{n}" +
+                        $"Thời gian: {item.InterviewTime}{n}" +
+                        $"Địa điểm: {item.InterviewLocation}{n}" +
+                        $"{n}" +
+                        $"Thanks & Regards").Replace("\r\n", "<br>");
+                    mailMessage.IsBodyHtml = true;
+                    mailMessage.BodyEncoding = Encoding.UTF8;
+                    client.Send(mailMessage);
+                }
+
+                return RedirectToAction("Index");
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
