@@ -7,7 +7,6 @@ namespace Recruitment.Core
         public CandidateDbContext()
             : base("name=CandidateDbContext")
         {
-            Database.SetInitializer<CandidateDbContext>(new CreateDatabaseIfNotExists<CandidateDbContext>());
         }
 
         public virtual DbSet<Candidate> Candidate { get; set; }

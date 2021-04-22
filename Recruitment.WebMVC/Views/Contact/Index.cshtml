@@ -9,7 +9,7 @@
     <div class="input-group w-25 py-3">
         <input type="text" class="form-control" placeholder="Nhập từ khoá" name="searchstr">
         <div class="input-group-append">
-            <button class="btn btn-success" type="submit">
+            <button class="btn btn-primary" type="submit">
                 Tìm kiếm
             </button>
         </div>
@@ -67,8 +67,8 @@
             </select>
         </div>
     </div>
-    <button type="reset" class="btn btn-success">Đặt lại</button>&nbsp;&nbsp;
-    <button type="submit" class="btn btn-success">Tìm kiếm</button>
+    <button type="reset" class="btn btn-primary">Đặt lại</button>&nbsp;&nbsp;
+    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
 </form>
 
 <!-- List candidate -->
@@ -79,11 +79,12 @@
             <th scope="col">Họ tên</th>
             <th scope="col">Vị trí</th>
             <th scope="col">Chức danh</th>
-            <th scope="col">Email</th>
             <th scope="col">Số điện thoại</th>
+            <th scope="col">Email</th>
             <th scope="col">Liên hệ</th>
             <th scope="col">Thời gian PV</th>
             <th scope="col">Địa điểm PV</th>
+            <th scope="col">Người PV</th>
             <th scope="col">Ghi chú</th>
             <th scope="col">Trạng thái</th>
             <th scope="col">Hành động</th>
@@ -115,6 +116,7 @@
                 </td>
                 <td>@item.InterviewTime</td>
                 <td>@item.InterviewLocation</td>
+                <td></td>
                 <td>@item.Note</td>
                 @switch (item.Status)
                 {
@@ -122,7 +124,20 @@
                         {
                             <td>Duyệt CV</td>
                             <td class="text-center">
-                                <button type="button" class="btn btn-info btn-sm" onclick="AddOrEdit()">Lịch test</button>
+                                <button type="button" class="btn btn-info btn-sm" onclick="Schedule(@item.CandidateId)">
+                                    @if (item.LevelId == 1)
+                                    {
+                                        <span>Lịch test</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Lịch PV</span>
+                                    }
+                                </button>&nbsp;
+                                @if (item.IsContacted != null && item.IsContacted == true)
+                                {
+                                    <button type="button" class="btn btn-success btn-sm">Gửi email</button>
+                                }
                             </td>
                             break;
                         }
@@ -245,9 +260,9 @@
 </div>
 
 <script>
-    var AddOrEdit = function (candidateId) {
+    var Schedule = function (candidateId) {
 
-        var url = "/Contact/AddOrEdit?CandidateId=" + candidateId;
+        var url = "/Contact/ScheduleView?CandidateId=" + candidateId;
 
         $("#myModalBodyDiv1").load(url, function () {
             $("#myModal1").modal("show");
