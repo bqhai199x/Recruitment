@@ -12,6 +12,7 @@ namespace Recruitment.Core
         public virtual DbSet<Candidate> Candidate { get; set; }
         public virtual DbSet<Level> Level { get; set; }
         public virtual DbSet<Position> Position { get; set; }
+        public virtual DbSet<Employee> Employee { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

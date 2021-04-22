@@ -17,8 +17,7 @@
 
     <div class="form-row">
         <label>Nguời PV</label>
-        @*@Html.TextBoxFor(model => model.Address, new { @class = "form-control" })*@
-        <input type="text" class="form-control" />
+        @Html.DropDownListFor(model => model.EmployeeId, ViewBag.EmployeeList as SelectList, "-- Select --", new { @class = "form-control" })
     </div>
 
     <div class="form-row">
@@ -31,3 +30,4 @@
         <button type="button" class="btn btn-danger" onclick="location.href='/Contact/NotbeContacted?CandidateId=@Model.CandidateId'">Không liên lạc được</button>
     </div>
 </form>
+

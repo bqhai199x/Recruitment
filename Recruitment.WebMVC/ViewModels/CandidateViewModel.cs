@@ -11,6 +11,8 @@ namespace Recruitment
 
         public int? LevelId { get; set; }
 
+        public int? EmployeeId { get; set; }
+
         public string FullName { get; set; }
 
         public string Birthday { get; set; }
@@ -26,6 +28,8 @@ namespace Recruitment
         public bool IsPDF { get; set; }
 
         public string IntroduceName { get; set; }
+
+        public string InterviewName { get; set; }
 
         public string LevelName { get; set; }
 
