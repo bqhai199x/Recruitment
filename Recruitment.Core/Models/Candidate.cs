@@ -16,6 +16,8 @@
 
         public int? LevelId { get; set; }
 
+        public int? EmployeeId { get; set; }
+
         public string FullName { get; set; }
 
         public string Birthday { get; set; }
@@ -32,10 +34,8 @@
 
         public string IntroduceName { get; set; }
 
-        [DefaultValue(null)]
         public int? IsApplied { get; set; }
 
-        [DefaultValue(null)]
         public bool? IsContacted { get; set; }
 
         public DateTime? InterviewTime { get; set; }
@@ -46,7 +46,6 @@
 
         public int? TestPoint { get; set; }
 
-        [DefaultValue(0)]
         public int Status { get; set; }
 
         [ForeignKey("LevelId")]
@@ -54,5 +53,8 @@
 
         [ForeignKey("PositionId")]
         public virtual Position Position { get; set; }
+
+        [ForeignKey("EmployeeId")]
+        public virtual Employee Employee { get; set; }
     }
 }

@@ -52,6 +52,32 @@ namespace Recruitment.Core
             };
             context.Level.AddRange(levels);
 
+            //Employee
+            var employees = new List<Employee>()
+            {
+                new Employee()
+                {
+                    FullName = "Vũ Mạnh Dương",
+                    Email = "bqhai.199x@gmail.com"
+                },
+                new Employee()
+                {
+                    FullName = "Vũ Trung Hiếu",
+                    Email = "hieuvt@saisystem.vn"
+                },
+                new Employee()
+                {
+                    FullName = "Cung Đình Tùng",
+                    Email = "tungcd@saisystem.vn"
+                },
+                new Employee()
+                {
+                    FullName = "Nguyễn Văn Tường",
+                    Email = "tuongnv@saisystem.vn"
+                }
+            };
+            context.Employee.AddRange(employees);
+
             //Candidate
             var candidates = new List<Candidate>()
             {
@@ -65,7 +91,8 @@ namespace Recruitment.Core
                     Phone = "0976445870",
                     Email = "haibq@saisystem.vn",
                     IntroduceName = null,
-                    CV = "CV_BuiQuangHai.pdf"
+                    CV = "Nguyen-Duy-Hanh.pdf",
+                    IsPDF = true
                 },
                 new Candidate()
                 {
@@ -77,7 +104,8 @@ namespace Recruitment.Core
                     Phone = "0972493540",
                     Email = "tinnd@saisystem.vn",
                     IntroduceName = null,
-                    CV = "CV_NguyenDuyTin.pdf"
+                    CV = "Dang-Thanh-Hieu.pdf",
+                    IsPDF = true
                 },
                 new Candidate()
                 {
@@ -89,7 +117,8 @@ namespace Recruitment.Core
                     Phone = "0968254196",
                     Email = "namld@saisystem.vn",
                     IntroduceName = null,
-                    CV = "CV_LuongDinhNam.pdf"
+                    CV = "Tran-Ngoc-Truong-CV.pdf",
+                    IsPDF = true
                 },
                 new Candidate()
                 {
@@ -101,7 +130,8 @@ namespace Recruitment.Core
                     Phone = "0927863541",
                     Email = "dieptt@saisystem.vn",
                     IntroduceName = "Bùi Quang Hải",
-                    CV = "CV_TranThienDiep.pdf"
+                    CV = "CV_FRESHER_DucThinh.pdf",
+                    IsPDF = true
                 },
                 new Candidate()
                 {
@@ -113,7 +143,8 @@ namespace Recruitment.Core
                     Phone = "0971269852",
                     Email = "luannv@saisystem.vn",
                     IntroduceName = "Bùi Quang Hải",
-                    CV = "CV_NguyenVanLuan.pdf"
+                    CV = "CM_Schedule.xlsx",
+                    IsPDF = false
                 },
                 new Candidate()
                 {
@@ -125,7 +156,8 @@ namespace Recruitment.Core
                     Phone = "0945896217",
                     Email = "vucda@saisystem.vn",
                     IntroduceName = "Nguyễn Văn Luân",
-                    CV = "CV_CaoDucAnhVu.pdf"
+                    CV = "CM_LogicDesign.xlsx",
+                    IsPDF = false
                 }
             };
             context.Candidate.AddRange(candidates);

@@ -53,12 +53,8 @@
   <ItemGroup>
     <Compile Include="Data\CandidateDbContext.cs" />
     <Compile Include="Data\DbInitializer.cs" />
-    <Compile Include="Migrations\202104200317097_CreateDatabase.cs" />
-    <Compile Include="Migrations\202104200317097_CreateDatabase.designer.cs">
-      <DependentUpon>202104200317097_CreateDatabase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Candidate.cs" />
+    <Compile Include="Models\Emloyee.cs" />
     <Compile Include="Models\Level.cs" />
     <Compile Include="Models\Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -66,11 +62,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\202104200317097_CreateDatabase.resx">
-      <DependentUpon>202104200317097_CreateDatabase.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

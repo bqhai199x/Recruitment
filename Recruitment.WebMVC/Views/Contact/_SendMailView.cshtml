@@ -1,0 +1,43 @@
+﻿@model Recruitment.WebMVC.EmailModelView
+
+<form action="/Contact/SendEmail" method="post">
+
+    @Html.HiddenFor(m => m.CandidateId)
+
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label>To</label>
+            @Html.TextBoxFor(model => model.To, new { @class = "form-control", type = "email" })
+        </div>
+    </div>
+
+    @*<div class="form-row">
+            <label>CC</label>
+            @Html.TextBoxFor(model => model.CC, new { @class = "form-control" })
+        </div>*@
+
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label>Bcc</label>
+            @Html.TextBoxFor(model => model.Bcc, new { @class = "form-control", type = "email" })
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label>Subject</label>
+            @Html.TextBoxFor(model => model.Subject, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label>Body</label>
+            @Html.TextAreaFor(model => model.Body, new { @class = "form-control", rows = "10" })
+        </div>
+    </div>
+
+        <div class="text-right">
+            <button type="submit" class="btn btn-success">Gửi</button>
+        </div>
+</form>
