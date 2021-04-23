@@ -15,7 +15,7 @@
     </div>
 </form>
 
-<form action="/Contact/Index/">
+<form action="/Contact/Index/" method="post">
     <div class="form-row w-75">
         <div class="form-group col-md-2">
             <label>Vị trí</label>
@@ -29,27 +29,27 @@
 
         <div class="form-group col-md-2">
             <label>Liên hệ</label>
-            <select class="form-control custom-select">
+            <select class="form-control custom-select" name="Contacted">
                 <option></option>
-                <option>Chưa liên hệ</option>
-                <option>Đã liên hệ</option>
-                <option>Không liên hệ được</option>
+                <option value="1">Chưa liên hệ</option>
+                <option value="2">Đã liên hệ</option>
+                <option value="3">Không liên hệ được</option>
             </select>
         </div>
 
         <div class="form-group col-md-2">
             <label>PV từ ngày</label>
-            <input type="date" class="form-control" value="" name="FromDate"/>
+            <input type="date" class="form-control" name="FromDate"/>
         </div>
 
         <div class="form-group col-md-2">
             <label>PV đến ngày</label>
-            <input type="date" class="form-control" />
+            <input type="date" class="form-control" name="ToDate"/>
         </div>
 
         <div class="form-group col-md-2">
             <label>Địa điểm</label>
-            <select class="form-control custom-select" name="Status">
+            <select class="form-control custom-select" name="Location">
                 <option></option>
                 <option>Hà Nội</option>
                 <option>Huế</option>
@@ -60,83 +60,84 @@
     <button type="submit" class="btn btn-primary">Tìm kiếm</button>
 </form>
 
-<div class="text-right">
-    <button class="btn btn-success">Gửi mail</button>&nbsp;
-    <button class="btn btn-success">Tạo nội dung mail</button>
-</div>
+<form>
+    <div class="text-right">
+        <button type="submit" formaction="/Contact/MultiSend" class="btn btn-success">Gửi mail</button>&nbsp;
+        <button type="submit" formaction="/Contact/CreateMail" class="btn btn-success">Tạo nội dung mail</button>
+    </div>
 
-<!-- List candidate -->
-<table class="table table-bordered mt-3">
-    <thead>
-        <tr class="text-center bg-secondary text-white">
-            <th scope="col"><input type="checkbox" onclick="CheckAll(this)" /></th>
-            <th scope="col">Họ tên</th>
-            <th scope="col">Vị trí</th>
-            <th scope="col">Chức danh</th>
-            <th scope="col">Số điện thoại</th>
-            <th scope="col">Email</th>
-            <th scope="col">Liên hệ</th>
-            <th scope="col">Thời gian PV</th>
-            <th scope="col">Địa điểm PV</th>
-            <th scope="col">Người PV</th>
-            <th scope="col">Ghi chú</th>
-            <th scope="col">Trạng thái</th>
-            <th scope="col">Hành động</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in ViewBag.CandidateList)
-        {
-            <tr>
-                <td class="text-center">
-                    <input type="checkbox" name="check" />
-                </td>
-                <td>@item.FullName</td>
-                <td>@item.PositionName</td>
-                <td>@item.LevelName</td>
-                <td>@item.Phone</td>
-                <td>@item.Email</td>
-                <td>
-                    @if (item.IsContacted == null)
-                    {
-
-                    }
-                    else if (item.IsContacted)
-                    {
-                        <span>Đã liên hệ</span>
-                    }
-                    else if (!item.IsContacted)
-                    {
-                        <span>Không liên hệ được</span>
-                    }
-                </td>
-                <td>@item.InterviewTime</td>
-                <td>@item.InterviewLocation</td>
-                <td>@item.InterviewName</td>
-                <td>@item.Note</td>
-                <td>Duyệt CV</td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-info btn-sm" onclick="Schedule(@item.CandidateId)">
-                        @if (item.LevelId == 1)
-                        {
-                            <span>Lịch test</span>
-                        }
-                        else
-                        {
-                            <span>Lịch PV</span>
-                        }
-                    </button>&nbsp;
-                    @if (item.IsContacted != null && item.IsContacted == true)
-                    {
-                        <button type="button" class="btn btn-success btn-sm" onclick="SendEmail(@item.CandidateId)">Preview</button>
-                    }
-                </td>
-
+    <!-- List candidate -->
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr class="text-center bg-secondary text-white">
+                <th scope="col"><input type="checkbox" onclick="CheckAll(this)" /></th>
+                <th scope="col" onclick="location.href='/Contact/Index?sortOrder=@ViewBag.SortByName'">Họ tên</th>
+                <th scope="col" onclick="location.href='/Contact/Index?sortOrder=@ViewBag.SortByPosition'">Vị trí</th>
+                <th scope="col" onclick="location.href='/Contact/Index?sortOrder=@ViewBag.SortBylevel'">Chức danh</th>
+                <th scope="col">Số điện thoại</th>
+                <th scope="col">Email</th>
+                <th scope="col" onclick="location.href='/Contact/Index?sortOrder=@ViewBag.SortByContacted'">Liên hệ</th>
+                <th scope="col" onclick="location.href='/Contact/Index?sortOrder=@ViewBag.SortByTime'">Thời gian PV</th>
+                <th scope="col" onclick="location.href='/Contact/Index?sortOrder=@ViewBag.SortByLocation'">Địa điểm PV</th>
+                <th scope="col" onclick="location.href='/Contact/Index?sortOrder=@ViewBag.SortByInterviewName'">Người PV</th>
+                <th scope="col">Ghi chú</th>
+                <th scope="col">Trạng thái</th>
+                <th scope="col">Hành động</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.CandidateList)
+            {
+                <tr>
+                    <td class="text-center">
+                        <input type="checkbox" name="CandidateId" value="@item.CandidateId"/>
+                    </td>
+                    <td>@item.FullName</td>
+                    <td>@item.PositionName</td>
+                    <td>@item.LevelName</td>
+                    <td>@item.Phone</td>
+                    <td>@item.Email</td>
+                    <td>
+                        @if (item.IsContacted == null)
+                        {
 
+                        }
+                        else if (item.IsContacted)
+                        {
+                            <span>Đã liên hệ</span>
+                        }
+                        else if (!item.IsContacted)
+                        {
+                            <span>Không liên hệ được</span>
+                        }
+                    </td>
+                    <td>@item.InterviewTime</td>
+                    <td>@item.InterviewLocation</td>
+                    <td>@item.InterviewName</td>
+                    <td>@item.Note</td>
+                    <td>Duyệt CV</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-info btn-sm" onclick="Schedule(@item.CandidateId)">
+                            @if (item.LevelId == 1)
+                            {
+                                <span>Lịch test</span>
+                            }
+                            else
+                            {
+                                <span>Lịch PV</span>
+                            }
+                        </button>&nbsp;
+                        @if (Session[$"Mail{item.CandidateId}"] != null)
+                        {
+                            <button type="button" class="btn btn-success btn-sm" onclick="SendEmail(@item.CandidateId)">Preview</button>
+                        }
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>
 <!-- Modal -->
 <div class="modal fade" id="myModal1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -192,7 +193,7 @@
     }
 
     var CheckAll = function toggle(source) {
-        checkboxes = document.getElementsByName('check');
+        checkboxes = document.getElementsByName('CandidateId');
         for (var i = 0, n = checkboxes.length; i < n; i++) {
             checkboxes[i].checked = source.checked;
         }

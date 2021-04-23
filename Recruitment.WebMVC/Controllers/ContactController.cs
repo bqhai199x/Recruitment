@@ -14,7 +14,7 @@ namespace Recruitment.WebMVC.Controllers
     {
         // GET: Contact
         CandidateDbContext db = new CandidateDbContext();
-        public ActionResult Index()
+        public ActionResult Index(string searchstr, int? PositionId, int? LevelId, int? Contacted, DateTime? FromDate, DateTime? ToDate, string Location, string sortOrder)
         {
             List<Position> plist = db.Position.ToList();
             ViewBag.PositionList = new SelectList(plist, "PositionId", "PositionName");
@@ -23,32 +23,130 @@ namespace Recruitment.WebMVC.Controllers
             ViewBag.LevelList = new SelectList(llist, "LevelId", "LevelName");
 
             List<CandidateViewModel> listCandi = db.Candidate
-                .Where(x => x.Status != 0 && x.Status != 1)
+                .Where(x => x.Status == 2)
                 .Select(x => new CandidateViewModel
                 {
                     CandidateId = x.CandidateId,
                     PositionId = x.PositionId,
                     EmployeeId = x.EmployeeId,
-                    InterviewName = x.Employee.FullName,
+                    InterviewName = x.EmployeeId==null?"":x.Employee.FullName,
                     LevelId = x.LevelId,
                     LevelName = x.Level.LevelName,
                     PositionName = x.Position.PositionName,
                     FullName = x.FullName,
-                    Birthday = x.Birthday,
-                    Address = x.Address,
                     Email = x.Email,
                     Phone = x.Phone,
                     IsContacted = x.IsContacted,
                     InterviewTime = x.InterviewTime,
-                    InterviewLocation = x.InterviewLocation,
+                    InterviewLocation = x.InterviewLocation == null?"": x.InterviewLocation,
                     Note = x.Note,
                     Status = x.Status,
-                    IntroduceName = x.IntroduceName,
-                    CV = x.CV,
-                    IsPDF = x.IsPDF,
-                    IsApplied = x.IsApplied
                 })
                 .ToList();
+
+            if (!string.IsNullOrEmpty(searchstr))
+            {
+                listCandi = listCandi
+                    .Where(x => x.FullName.Contains(searchstr) || x.PositionName.Contains(searchstr) || x.LevelName.Contains(searchstr) ||
+                    x.InterviewLocation.Contains(searchstr) || x.InterviewName.Contains(searchstr))
+                    .ToList();
+            }
+
+            if (PositionId != null)
+            {
+                listCandi = listCandi.Where(x => x.PositionId == PositionId).ToList();
+            }
+
+            if (LevelId != null)
+            {
+                listCandi = listCandi.Where(x => x.LevelId == LevelId).ToList();
+            }
+
+            if (Contacted != null)
+            {
+                switch (Contacted)
+                {
+                    case 1:
+                        listCandi = listCandi.Where(x => x.IsContacted == null).ToList();
+                        break;
+                    case 2:
+                        listCandi = listCandi.Where(x => x.IsContacted == true).ToList();
+                        break;
+                    default:
+                        listCandi = listCandi.Where(x => x.IsContacted == false).ToList();
+                        break;
+                }
+            }
+
+            if (FromDate != null)
+            {
+                listCandi = listCandi.Where(x => x.InterviewTime > FromDate).ToList();
+            }
+
+            if (ToDate != null)
+            {
+                listCandi = listCandi.Where(x => x.InterviewTime < ToDate).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(Location))
+            {
+                listCandi = listCandi.Where(x => x.InterviewLocation == Location).ToList();
+            }
+
+
+            ViewBag.SortByName = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.SortByPosition = sortOrder == "position" ? "position_desc" : "position";
+            ViewBag.SortByLevel = sortOrder == "level" ? "level_desc" : "level";
+            ViewBag.SortByContacted = sortOrder == "contacted" ? "contacted_desc" : "contacted";
+            ViewBag.SortByTime = sortOrder == "time" ? "time_desc" : "time";
+            ViewBag.SortByLocation = sortOrder == "location" ? "location_desc" : "location";
+            ViewBag.SortByInterviewName = sortOrder == "ivname" ? "ivname_desc" : "ivname";
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    listCandi = listCandi.OrderByDescending(s => s.FullName).ToList();
+                    break;
+                case "position":
+                    listCandi = listCandi.OrderBy(s => s.PositionId).ToList();
+                    break;
+                case "position_desc":
+                    listCandi = listCandi.OrderByDescending(s => s.PositionId).ToList();
+                    break;
+                case "level":
+                    listCandi = listCandi.OrderBy(s => s.LevelId).ToList();
+                    break;
+                case "level_desc":
+                    listCandi = listCandi.OrderByDescending(s => s.LevelId).ToList();
+                    break;
+                case "contacted":
+                    listCandi = listCandi.OrderBy(s => s.IsContacted).ToList();
+                    break;
+                case "contacted_desc":
+                    listCandi = listCandi.OrderByDescending(s => s.IsContacted).ToList();
+                    break;
+                case "time":
+                    listCandi = listCandi.OrderBy(s => s.InterviewTime).ToList();
+                    break;
+                case "time_desc":
+                    listCandi = listCandi.OrderByDescending(s => s.InterviewTime).ToList();
+                    break;
+                case "location":
+                    listCandi = listCandi.OrderBy(s => s.InterviewLocation).ToList();
+                    break;
+                case "location_desc":
+                    listCandi = listCandi.OrderByDescending(s => s.InterviewLocation).ToList();
+                    break;
+                case "ivname":
+                    listCandi = listCandi.OrderBy(s => s.InterviewName).ToList();
+                    break;
+                case "ivname_desc":
+                    listCandi = listCandi.OrderByDescending(s => s.InterviewName).ToList();
+                    break;
+                default:
+                    listCandi = listCandi.OrderBy(s => s.FullName).ToList();
+                    break;
+            }
 
             ViewBag.CandidateList = listCandi;
 
@@ -102,28 +200,11 @@ namespace Recruitment.WebMVC.Controllers
         {
             var candi = db.Candidate.Find(CandidateId);
             var n = Environment.NewLine;
-            var email = new EmailModelView()
-            {
-                CandidateId = candi.CandidateId,
-                To = candi.Email,
-                Bcc = candi.Employee.Email,
-                Subject = candi.LevelId == 1 ? "Saishunkan System Vietnam_Thư mời test" : "Vòng 1 - Saishunkan System Vietnam_Thư mời phỏng vấn",
-                Body =
-                    $"Chào bạn {candi.FullName},{n}" +
-                    $"{n}" +
-                    $"Chúng tôi là phụ trách nhân sự công ty Saishunkan System Vietnam.{n}" +
-                    $"Cảm ơn bạn đã nộp hồ sơ ứng tuyển vị trí {candi.Level.LevelName} {candi.Position.PositionName} cho chúng tôi.{n}" +
-                    $"{n}" +
-                    $"Bên chúng tôi có kế hoạch phỏng vấn vào thời gian và địa điểm như sau:{n}" +
-                    $"Thời gian: {candi.InterviewTime}{n}" +
-                    $"Địa điểm: {candi.InterviewLocation}{n}" +
-                    $"{n}" +
-                    $"Thanks & Regards"
-            };
+            var email = Session[$"Mail{CandidateId}"] as EmailModelView;
             return PartialView("_SendMailView", email);
         }
 
-        public ActionResult SendEmail(EmailModelView email)
+        public ActionResult MultiSend(int[] CandidateId)
         {
             try
             {
@@ -137,18 +218,33 @@ namespace Recruitment.WebMVC.Controllers
                 client.UseDefaultCredentials = false;
                 client.Credentials = new NetworkCredential(senderEmail, senderPassword);
 
-                MailMessage mailMessage = new MailMessage();
-                mailMessage.From = new MailAddress(senderEmail);
-                mailMessage.To.Add(email.To);
-                mailMessage.Bcc.Add(email.Bcc);
-                mailMessage.Subject = email.Subject;
-                mailMessage.Body = email.Body.Replace("\r\n", "<br>");
-                mailMessage.IsBodyHtml = true;
-                mailMessage.BodyEncoding = Encoding.UTF8;
-                client.Send(mailMessage);
+                var maillist = new List<EmailModelView>();
+                for (int i = 0; i < CandidateId.Length; i++)
+                {
+                    maillist.Add(Session[$"Mail{CandidateId[i]}"] as EmailModelView);
+                }
+
+
+                foreach (var item in maillist)
+                {
+                    MailMessage mailMessage = new MailMessage();
+                    mailMessage.From = new MailAddress(senderEmail);
+                    mailMessage.To.Add(item.To);
+                    mailMessage.Bcc.Add(item.Bcc);
+                    mailMessage.Subject = item.Subject;
+                    mailMessage.Body = item.Body.Replace("\r\n", "<br>");
+                    mailMessage.IsBodyHtml = true;
+                    mailMessage.BodyEncoding = Encoding.UTF8;
+                    client.Send(mailMessage);
+                }
+
+                for (int i = 0; i < CandidateId.Length; i++)
+                {
+                    db.Candidate.Find(CandidateId[i]).Status = db.Candidate.Find(CandidateId[i]).LevelId == 1 ? 3 : 5;
+                }
+                db.SaveChanges();
 
                 return RedirectToAction("Index");
-
             }
             catch (Exception ex)
             {
@@ -156,34 +252,25 @@ namespace Recruitment.WebMVC.Controllers
             }
         }
 
-        public ActionResult SendMulti(int[] CandidateId)
+        public ActionResult CreateMail(int[] CandidateId)
         {
             try
             {
-                string senderEmail = System.Configuration.ConfigurationManager.AppSettings["SenderEmail"].ToString();
-                string senderPassword = System.Configuration.ConfigurationManager.AppSettings["SenderPassword"].ToString();
-
-                SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
-                client.EnableSsl = true;
-                client.Timeout = 100000;
-                client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                client.UseDefaultCredentials = false;
-                client.Credentials = new NetworkCredential(senderEmail, senderPassword);
-
                 var emplst = new List<Candidate>();
                 for (int i = 0; i < CandidateId.Length; i++)
                 {
                     emplst.Add(db.Candidate.Find(CandidateId[i]));
                 }
+
                 var n = Environment.NewLine;
                 foreach (var item in emplst)
                 {
-                    MailMessage mailMessage = new MailMessage();
-                    mailMessage.From = new MailAddress(senderEmail);
-                    mailMessage.To.Add(item.Email);
-                    mailMessage.Bcc.Add(item.Employee.FullName);
-                    mailMessage.Subject = item.LevelId == 1 ? "Saishunkan System Vietnam_Thư mời test" : "Vòng 1 - Saishunkan System Vietnam_Thư mời phỏng vấn";
-                    mailMessage.Body =
+                    EmailModelView mail = new EmailModelView();
+                    mail.CandidateId = item.CandidateId;
+                    mail.To = item.Email;
+                    mail.Bcc = item.Employee.Email;
+                    mail.Subject = item.LevelId == 1 ? "Saishunkan System Vietnam_Thư mời test" : "Vòng 1 - Saishunkan System Vietnam_Thư mời phỏng vấn";
+                    mail.Body =
                         ($"Chào bạn {item.FullName},{n}" +
                         $"{n}" +
                         $"Chúng tôi là phụ trách nhân sự công ty Saishunkan System Vietnam.{n}" +
@@ -193,19 +280,27 @@ namespace Recruitment.WebMVC.Controllers
                         $"Thời gian: {item.InterviewTime}{n}" +
                         $"Địa điểm: {item.InterviewLocation}{n}" +
                         $"{n}" +
-                        $"Thanks & Regards").Replace("\r\n", "<br>");
-                    mailMessage.IsBodyHtml = true;
-                    mailMessage.BodyEncoding = Encoding.UTF8;
-                    client.Send(mailMessage);
+                        $"Thanks & Regards");
+
+                    Session[$"Mail{item.CandidateId}"] = mail;
                 }
-
                 return RedirectToAction("Index");
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+
+                throw;
             }
+        }
+        public ActionResult UpdateMail(EmailModelView model)
+        {
+            var mail = Session[$"Mail{model.CandidateId}"] as EmailModelView;
+            mail.To = model.To;
+            mail.Bcc = model.Bcc;
+            mail.Subject = model.Subject;
+            mail.Body = model.Body;
+
+            return RedirectToAction("Index");
         }
     }
 }

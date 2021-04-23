@@ -1,6 +1,6 @@
 ﻿@model Recruitment.WebMVC.EmailModelView
 
-<form action="/Contact/SendEmail" method="post">
+<form action="/Contact/UpdateMail" method="post">
 
     @Html.HiddenFor(m => m.CandidateId)
 
@@ -38,6 +38,6 @@
     </div>
 
         <div class="text-right">
-            <button type="submit" class="btn btn-success">Gửi</button>
+            <button type="submit" class="btn btn-success">Save</button>
         </div>
 </form>

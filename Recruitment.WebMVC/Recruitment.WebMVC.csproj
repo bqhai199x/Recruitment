@@ -235,6 +235,7 @@
     <Compile Include="App_Start\DatabaseSetup.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ApproveController.cs" />
+    <Compile Include="Controllers\CalendarController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -254,6 +255,7 @@
     <Content Include="Views\Contact\Index.cshtml" />
     <Content Include="Views\Contact\_ScheduleView.cshtml" />
     <Content Include="Views\Contact\_SendMailView.cshtml" />
+    <Content Include="Views\Calendar\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -7,22 +7,23 @@
     <script src="~/Scripts/jquery-3.0.0.min.js"></script>
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <script src="~/Scripts/bootstrap.min.js"></script>
-    <link href="~/Content/simple_sidebar.css" rel="stylesheet"/>
+    <link href="~/Content/simple_sidebar.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="d-flex py-3" id="wrapper">
+    <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
         <div class="bg-light border-right" id="sidebar-wrapper">
             <div class="list-group list-group-flush">
                 <a href="@Url.Action("Index","Home")" class="list-group-item list-group-item-action bg-light">Danh sách</a>
                 <a href="@Url.Action("Index","Approve")" class="list-group-item list-group-item-action bg-light">Chưa duyệt</a>
                 <a href="@Url.Action("Index","Contact")" class="list-group-item list-group-item-action bg-light">Liên hệ</a>
+                <a href="@Url.Action("Index","Calendar")" class="list-group-item list-group-item-action bg-light">Calendar</a>
             </div>
         </div>
 
         <div class="container-fluid">
             @RenderBody()
         </div>
-        </div>
+    </div>
 </body>
 </html>
