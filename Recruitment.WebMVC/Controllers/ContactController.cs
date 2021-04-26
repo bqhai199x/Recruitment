@@ -177,20 +177,19 @@ namespace Recruitment.WebMVC.Controllers
             candi.InterviewTime = model.InterviewTime;
             candi.InterviewLocation = model.InterviewLocation;
             candi.Note = model.Note;
-            candi.IsContacted = true;
+            candi.IsContacted = model.IsContacted;
             candi.EmployeeId = model.EmployeeId;
             db.SaveChanges();
             return RedirectToAction("Index");
         }
 
-        public ActionResult NotBeContacted(int CandidateId)
+        public ActionResult Cancel(int CandidateId)
         {
             var candi = db.Candidate.Find(CandidateId);
             candi.InterviewTime = null;
             candi.InterviewLocation = null;
             candi.Note = null;
-            candi.IsContacted = false;
-            candi.Status = 2;
+            candi.IsContacted = null;
             candi.EmployeeId = null;
             db.SaveChanges();
             return RedirectToAction("Index");

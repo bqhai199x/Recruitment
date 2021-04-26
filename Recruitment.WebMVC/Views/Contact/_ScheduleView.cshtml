@@ -25,9 +25,17 @@
         @Html.TextBoxFor(model => model.Note, new { @class = "form-control" })
     </div>
 
+    <div class="form-row">
+        <label>Trạng thái</label>
+        <select class="form-control" name="IsContacted">
+            <option value="true">Đã liên lạc</option>
+            <option value="false">Không liên lạc được</option>
+        </select>
+    </div>
+
     <div class="text-right pt-3">
         <button type="submit" class="btn btn-success">Xác nhận</button>
-        <button type="button" class="btn btn-danger" onclick="location.href='/Contact/NotbeContacted?CandidateId=@Model.CandidateId'">Không liên lạc được</button>
+        <button type="button" class="btn btn-danger" onclick="location.href='/Contact/Cancel?CandidateId=@Model.CandidateId'">Xoá</button>
     </div>
 </form>
 

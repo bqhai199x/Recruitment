@@ -18,11 +18,9 @@ namespace Recruitment.WebMVC.Controllers
 
         public JsonResult GetEvents()
         {
-            using (CandidateDbContext dc = new CandidateDbContext())
-            {
-                var events = dc.Candidate.ToList();
-                return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-            }
+            db.Configuration.ProxyCreationEnabled = false;
+            var events = db.Candidate.Where(x => x.IsContacted == true).ToList();
+            return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
     }
 }
