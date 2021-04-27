@@ -89,10 +89,20 @@
             @foreach (var item in ViewBag.CandidateList)
             {
                 <tr>
+                    @{
+                        var x = item.InterviewTime == null ? "disabled" : "";
+                    }
                     <td class="text-center">
-                        <input type="checkbox" name="CandidateId" value="@item.CandidateId" />
+                        <input type="checkbox" name="CandidateId" value="@item.CandidateId" @x />
+                        @*@Session.Remove($"SendError{@item.CandidateId}")*@
                     </td>
-                    <td>@item.FullName</td>
+                    <td>
+                        @item.FullName
+                        <p class="text-danger">
+                            @Session[$"SendError{item.CandidateId}"]
+                            @{Session[$"SendError{item.CandidateId}"] = "";}
+                        </p>
+                    </td>
                     <td>@item.PositionName</td>
                     <td>@item.LevelName</td>
                     <td>@item.Phone</td>
@@ -195,6 +205,8 @@
     var CheckAll = function toggle(source) {
         checkboxes = document.getElementsByName('CandidateId');
         for (var i = 0, n = checkboxes.length; i < n; i++) {
+            if (checkboxes[i].disabled)
+                continue;
             checkboxes[i].checked = source.checked;
         }
     }

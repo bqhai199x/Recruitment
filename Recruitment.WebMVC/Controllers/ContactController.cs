@@ -29,7 +29,7 @@ namespace Recruitment.WebMVC.Controllers
                     CandidateId = x.CandidateId,
                     PositionId = x.PositionId,
                     EmployeeId = x.EmployeeId,
-                    InterviewName = x.EmployeeId==null?"":x.Employee.FullName,
+                    InterviewName = x.EmployeeId == null ? "" : x.Employee.FullName,
                     LevelId = x.LevelId,
                     LevelName = x.Level.LevelName,
                     PositionName = x.Position.PositionName,
@@ -38,7 +38,7 @@ namespace Recruitment.WebMVC.Controllers
                     Phone = x.Phone,
                     IsContacted = x.IsContacted,
                     InterviewTime = x.InterviewTime,
-                    InterviewLocation = x.InterviewLocation == null?"": x.InterviewLocation,
+                    InterviewLocation = x.InterviewLocation == null ? "" : x.InterviewLocation,
                     Note = x.Note,
                     Status = x.Status,
                 })
@@ -167,7 +167,7 @@ namespace Recruitment.WebMVC.Controllers
                 model.InterviewName = candi.EmployeeId == null ? null : candi.Employee.FullName;
             }
             List<Employee> elist = db.Employee.ToList();
-            ViewBag.EmployeeList = new SelectList(elist, "EmployeeId", "FullName");
+            ViewBag.EmployeeList = elist;
             return PartialView("_ScheduleView", model);
         }
 
@@ -192,6 +192,7 @@ namespace Recruitment.WebMVC.Controllers
             candi.IsContacted = null;
             candi.EmployeeId = null;
             db.SaveChanges();
+            Session.Remove($"Mail{CandidateId}");
             return RedirectToAction("Index");
         }
 
@@ -207,6 +208,14 @@ namespace Recruitment.WebMVC.Controllers
         {
             try
             {
+                foreach (var item in CandidateId)
+                {
+                    if (Session[$"Mail{item}"] == null)
+                    {
+                        Session[$"SendError{item}"] = "Chưa tạo mail";
+                        return RedirectToAction("Index");
+                    }
+                }
                 string senderEmail = System.Configuration.ConfigurationManager.AppSettings["SenderEmail"].ToString();
                 string senderPassword = System.Configuration.ConfigurationManager.AppSettings["SenderPassword"].ToString();
 

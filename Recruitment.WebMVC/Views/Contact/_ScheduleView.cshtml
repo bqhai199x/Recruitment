@@ -9,15 +9,23 @@
 
     <div class="form-row">
         <label>Địa điểm PV</label>
-        <select class="form-control" name="InterviewLocation">
-            <option>Hà Nội</option>
-            <option>Huế</option>
+        <select class="form-control" name="InterviewLocation" required>
+            <option hidden></option>
+            <option @(Model.InterviewLocation == "Hà Nội" ? "selected" : "")>Hà Nội</option>
+            <option @(Model.InterviewLocation == "Huế" ? "selected" : "")>Huế</option>
         </select>
     </div>
 
     <div class="form-row">
         <label>Nguời PV</label>
-        @Html.DropDownListFor(model => model.EmployeeId, ViewBag.EmployeeList as SelectList, "-- Select --", new { @class = "form-control" })
+        @*@Html.DropDownListFor(model => model.EmployeeId, ViewBag.EmployeeList as SelectList, "-- Select --", new { @class = "form-control" })*@
+        <select class="form-control" name="EmployeeId" required>
+            <option hidden></option>
+            @foreach (var item in ViewBag.EmployeeList)
+            {
+                <option value="@item.EmployeeId" @(Model.EmployeeId == item.EmployeeId ? "selected" : "")>@item.FullName</option>
+            }
+        </select>
     </div>
 
     <div class="form-row">

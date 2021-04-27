@@ -1,11 +1,15 @@
-﻿@model Recruitment.CandidateViewModel
+﻿@page
+@model Recruitment.WebAPI.Pages.Shared.IndexModel
+@{
+}
 
 @{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
     ViewBag.Title = "Trang chủ";
 }
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mt-3" onclick="AddOrEdit(0)">
+<button type="button" class="btn btn-primary mt-3">
     Thêm ứng viên
 </button>
 
@@ -31,14 +35,14 @@
 <div class="modal fade" id="myModal2">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content" id="myModalBodyDiv2">
-            
+
         </div>
     </div>
 </div>
 
 <input type="hidden" id="hiddenCandidateId" />
 
-<form action="/Home/Index/">
+<form action="">
     <div class="input-group w-25 py-3">
         <input type="text" class="form-control" placeholder="Tìm kiếm ứng viên" name="namestr">
         <div class="input-group-append">
@@ -65,46 +69,57 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in ViewBag.CandidateList)
-        {
-            <tr>
-                <td>@item.LevelName</td>
-                <td>@item.PositionName</td>
-                <td>@item.FullName</td>
-                <td>@item.Birthday</td>
-                <td>@item.Address</td>
-                <td>@item.Phone</td>
-                <td>@item.Email</td>
-                <td>@item.IntroduceName</td>
-                <td>
-                    <button class="btn btn-link" onclick="ShowCV(@item.CandidateId)">@item.CV</button>
-                </td>
-                <td>
-                    <button type="button" onclick="AddOrEdit(@item.CandidateId)" class="btn btn-success btn-sm">Sửa</button>&nbsp;
-                    <button type="button" onclick="location.href='/Home/Delete/@item.CandidateId'" class="btn btn-danger btn-sm">Xoá</button>
-                </td>
-            </tr>
-        }
+        <tr id="bang1">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+                <button class="btn btn-link"></button>
+            </td>
+            <td class="text-center">
+                <button type="button" class="btn btn-success btn-sm">Sửa</button>&nbsp;
+                <button type="button" class="btn btn-danger btn-sm">Xoá</button>
+            </td>
+        </tr>
     </tbody>
 </table>
 
 <script>
 
-    var AddOrEdit = function (candidateId) {
+    //var AddOrEdit = function (candidateId) {
 
-        var url = "/Home/AddOrEdit?CandidateId=" + candidateId;
+    //    var url = "/Home/AddOrEdit?CandidateId=" + candidateId;
 
-        $("#myModalBodyDiv1").load(url, function () {
-            $("#myModal1").modal("show");
+    //    $("#myModalBodyDiv1").load(url, function () {
+    //        $("#myModal1").modal("show");
+    //    })
+    //}
+
+    //var ShowCV = function (candidateId) {
+
+    //    var url = "/Approve/ShowCV?CandidateId=" + candidateId;
+
+    //    $("#myModalBodyDiv2").load(url, function () {
+    //        $("#myModal2").modal("show");
+    //    })
+    //}
+
+    var html
+    fetch("/api/candidate/")
+        .then(response => response.json())
+        .then(data => {
+            var obj = JSON.parse(JSON.stringify(data))
+            for (var i = 0; i < obj.length; i++) {
+                html += `<td>${obj[i].fullName}</td>`
+            }
+            document.getElementById('bang1').innerHTML = html
+            
         })
-    }
-
-    var ShowCV = function (candidateId) {
-
-        var url = "/Approve/ShowCV?CandidateId=" + candidateId;
-
-        $("#myModalBodyDiv2").load(url, function () {
-            $("#myModal2").modal("show");
-        })
-    }
+    
+    
 </script>
