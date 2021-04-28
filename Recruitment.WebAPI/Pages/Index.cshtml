@@ -9,7 +9,7 @@
 }
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mt-3">
+<button type="button" class="btn btn-primary mt-3" onclick="ShowModal(0)">
     Thêm ứng viên
 </button>
 
@@ -18,13 +18,82 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Nhập ứng viên</h5>
+                <h5 class="modal-title" id="staticBackdropLabel">Thông tin ứng viên</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body" id="myModalBodyDiv1">
+                <div>
+                    <form id="myForm" action="javascript:void(0);" method="post" enctype="multipart/form-data" onsubmit="AddEdit()">
 
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Vị trí</label>
+                                <select class="custom-select" id="position">
+                                    <option hidden></option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label>Chức danh</label>
+                                <select class="custom-select" id="level">
+                                    <option hidden></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Import CV</label>
+                                <div class="custom-file">
+                                    <input type="file" name="CV" class="custom-file-input" id="myInput" aria-describedby="myInput">
+                                    <label class="custom-file-label" for="myInput">Choose file</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label>Người giới thiệu</label>
+                                <input type="text" class="form-control" id="introduce" />
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputName">Họ tên</label>
+                                <input type="text" class="form-control" id="fullname" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputPhone">Phone</label>
+                                <input type="text" class="form-control" id="phone" />
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="inputBirthday">Birthday</label>
+                                <input type="text" class="form-control" id="birthday" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inputEmail">Email</label>
+                                <input type="text" class="form-control" id="email" />
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            &#10
+                            <div class="form-group col-md-12">
+                                <label for="inputAddress">Address</label>
+                                <input type="text" class="form-control" id="address" />
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success">
+                                <span>Save</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
         </div>
@@ -40,11 +109,10 @@
     </div>
 </div>
 
-<input type="hidden" id="hiddenCandidateId" />
 
-<form action="">
+<form @*action="api/candidate"*@>
     <div class="input-group w-25 py-3">
-        <input type="text" class="form-control" placeholder="Tìm kiếm ứng viên" name="namestr">
+        <input type="text" class="form-control" placeholder="Tìm kiếm ứng viên" name="searchStr">
         <div class="input-group-append">
             <button class="btn btn-primary" type="submit">
                 Tìm kiếm
@@ -68,38 +136,12 @@
             <th scope="col">CV</th>
         </tr>
     </thead>
-    <tbody>
-        <tr id="bang1">
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>
-                <button class="btn btn-link"></button>
-            </td>
-            <td class="text-center">
-                <button type="button" class="btn btn-success btn-sm">Sửa</button>&nbsp;
-                <button type="button" class="btn btn-danger btn-sm">Xoá</button>
-            </td>
-        </tr>
+    <tbody id="lstCandi">
     </tbody>
 </table>
-
 <script>
 
-    //var AddOrEdit = function (candidateId) {
-
-    //    var url = "/Home/AddOrEdit?CandidateId=" + candidateId;
-
-    //    $("#myModalBodyDiv1").load(url, function () {
-    //        $("#myModal1").modal("show");
-    //    })
-    //}
-
+    var idtarget = 0;
     //var ShowCV = function (candidateId) {
 
     //    var url = "/Approve/ShowCV?CandidateId=" + candidateId;
@@ -108,18 +150,134 @@
     //        $("#myModal2").modal("show");
     //    })
     //}
-
-    var html
-    fetch("/api/candidate/")
+    var listCandi;
+    var html = "";
+    fetch("/api/candidate")
         .then(response => response.json())
         .then(data => {
-            var obj = JSON.parse(JSON.stringify(data))
-            for (var i = 0; i < obj.length; i++) {
-                html += `<td>${obj[i].fullName}</td>`
+            listCandi = JSON.parse(JSON.stringify(data))
+            for (var i = 0; i < listCandi.length; i++) {
+                html += `<tr>
+                            <td>${listCandi[i].levelName}</td>
+                            <td>${listCandi[i].positionName}</td>
+                            <td>${listCandi[i].fullName}</td>
+                            <td>${listCandi[i].birthday}</td>
+                            <td>${listCandi[i].address}</td>
+                            <td>${listCandi[i].phone}</td>
+                            <td>${listCandi[i].email}</td>
+                            <td>${listCandi[i].introduceName == null ? "" : listCandi[i].introduceName}</td>
+                            <td>${listCandi[i].cv}</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-success btn-sm" onclick="ShowModal(${listCandi[i].candidateId})">Sửa</button>&nbsp;
+                            <button type="button" class="btn btn-danger btn-sm" onclick="Delete(${listCandi[i].candidateId})">Xoá</button>
+                            </td>
+                        </tr>`
             }
-            document.getElementById('bang1').innerHTML = html
-            
+            document.getElementById('lstCandi').innerHTML = html
         })
-    
-    
+
+
+    fetch("/api/candidate/level")
+        .then(response => response.json())
+        .then(data => {
+            var lstLevel = JSON.parse(JSON.stringify(data))
+            $.each(lstLevel, function (key, value) {
+                $('#level')
+                    .append($("<option></option>")
+                        .attr("value", key)
+                        .text(value.levelName));
+            });
+        })
+
+    fetch("/api/candidate/position")
+        .then(response => response.json())
+        .then(data => {
+            var lstPosition = JSON.parse(JSON.stringify(data))
+            $.each(lstPosition, function (key, value) {
+                $('#position')
+                    .append($("<option></option>")
+                        .attr("value", key)
+                        .text(value.positionName));
+            });
+        })
+
+    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+        var fileName = document.getElementById("myInput").files[0].name;
+        var nextSibling = e.target.nextElementSibling
+        nextSibling.innerText = fileName
+    })
+
+    function ShowModal(candidateId) {
+
+        if (candidateId != 0) {
+            const item = listCandi.find(item => item.candidateId === candidateId);
+
+            document.getElementById('fullname').value = item.fullName;
+            document.getElementById('introduce').value = item.introduceName;
+            document.getElementById('phone').value = item.phone;
+            document.getElementById('birthday').value = item.birthday;
+            document.getElementById('email').value = item.email;
+            document.getElementById('address').value = item.address;
+            document.getElementById('position').options.selectedIndex = item.positionId;
+            document.getElementById('level').options.selectedIndex = item.levelId;
+            //document.getElementById('myForm').addEventListener('submit', AddEdit(item.candidateId));
+            idtarget = item.candidateId;
+        }
+
+        $("#myModal1").modal("show");
+    }
+
+    function Delete(candidateId) {
+        fetch(`api/candidate/${candidateId}`, {
+            method: 'DELETE'
+        })
+            .then(() => location.reload())
+            .catch(error => console.error('Unable to get items.', error));
+    }
+
+    function AddEdit() {
+        //var fileName = document.getElementById('myInput').files[0].name
+        var item = {
+            fullName: document.getElementById('fullname').value,
+            positionId: document.getElementById('position').selectedIndex,
+            levelId: document.getElementById('level').selectedIndex,
+            phone: document.getElementById('phone').value,
+            introduceName: document.getElementById('introduce').value,
+            birthday: document.getElementById('birthday').value,
+            email: document.getElementById('email').value,
+            address: document.getElementById('address').value,
+            //cv: fileName
+        };
+        if (idtarget == 0) {
+            fetch('/api/candidate', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(item)
+            })
+                .then(response => response.json())
+                .then(() => {
+                    location.reload(), idtarget = 0
+                })
+                .catch(error => console.error('Unable to get items.', error));
+        }
+        else {
+            item.candidateId = idtarget;
+            fetch(`api/candidate/${idtarget}`, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(item)
+            })
+                .then(() => {
+                    location.reload(), idtarget = 0
+                })
+                .catch(error => console.error('Unable to update item.', error));
+        }
+    }
+
 </script>

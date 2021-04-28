@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Recruitment.Core;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Recruitment.WebAPI.Data
 {
     public class RecruitmentDbContext : DbContext
     {
-        public RecruitmentDbContext (DbContextOptions<RecruitmentDbContext> options)
+        public RecruitmentDbContext(DbContextOptions<RecruitmentDbContext> options)
             : base(options)
         {
         }
-
-        public DbSet<Recruitment.Core.Candidate> Candidate { get; set; }
+        public DbSet<Core.Candidate> Candidate { get; set; }
+        public DbSet<Core.Employee> Employee { get; set; }
+        public DbSet<Core.Level> Level { get; set; }
+        public DbSet<Core.Position> Position { get; set; }
     }
 }

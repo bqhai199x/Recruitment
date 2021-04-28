@@ -1,16 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Recruitment.WebAPI.Data;
 
 namespace Recruitment.WebAPI
@@ -30,8 +23,7 @@ namespace Recruitment.WebAPI
 
             services.AddControllers();
             services.AddRazorPages();
-            services.AddDbContext<RecruitmentDbContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("RecruitmentDbContext")));
+            services.AddDbContext<RecruitmentDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("RecruitmentDbContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +33,9 @@ namespace Recruitment.WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.UseHttpsRedirection();
 

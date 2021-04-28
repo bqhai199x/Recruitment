@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Recruitment.Core;
 using Recruitment.WebAPI.Data;
+using Recruitment.WebAPI.ViewModels;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Recruitment.WebAPI.Controllers
 {
@@ -15,28 +15,58 @@ namespace Recruitment.WebAPI.Controllers
     public class CandidateController : ControllerBase
     {
         private readonly RecruitmentDbContext _context;
+        private readonly List<CandidateVM> listCandi;
 
         public CandidateController(RecruitmentDbContext context)
         {
             _context = context;
+            listCandi = _context.Candidate
+                .Select(x => new CandidateVM
+                {
+                    CandidateId = x.CandidateId,
+                    LevelId = x.LevelId,
+                    LevelName = x.Level.LevelName,
+                    PositionId = x.PositionId,
+                    PositionName = x.Position.PositionName,
+                    FullName = x.FullName,
+                    Birthday = x.Birthday,
+                    Address = x.Address,
+                    Phone = x.Phone,
+                    Email = x.Email,
+                    IntroduceName = x.IntroduceName,
+                    CV = x.CV,
+                })
+                .ToList();
         }
 
-        //[HttpGet("GetCandidate")]
-        //public IActionResult Get()
-        //{
-        //    var data = _context.Candidate.ToList();
-        //    return Ok(data);
-        //}
+        // GET: api/Candidate
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Candidate>>> GetCandidate()
+        public ActionResult<IEnumerable<CandidateVM>> GetCandidate(string searchStr)
         {
-            return await _context.Candidate.ToListAsync();
+            if (!string.IsNullOrEmpty(searchStr))
+            {
+                return listCandi.Where(x => x.FullName.Contains(searchStr)).ToList();
+            }
+            return listCandi;
         }
-        /*
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Candidate>> GetCandidate(int id)
+
+        [HttpGet("level")]
+        public ActionResult<IEnumerable<Level>> GetLevel()
         {
-            var candidate = await _context.Candidate.FindAsync(id);
+            return _context.Level.ToList();
+        }
+
+        [HttpGet("position")]
+        public ActionResult<IEnumerable<Position>> GetPosition()
+        {
+            return _context.Position.ToList();
+        }
+
+        // GET: api/Candidate/5
+        [HttpGet("{id}")]
+        public ActionResult<CandidateVM> GetCandidate(int id)
+        {
+            var candidate = listCandi.Find(x => x.CandidateId == id);
 
             if (candidate == null)
             {
@@ -46,7 +76,7 @@ namespace Recruitment.WebAPI.Controllers
             return candidate;
         }
 
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: api/Candidate/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCandidate(int id, Candidate candidate)
         {
@@ -76,16 +106,19 @@ namespace Recruitment.WebAPI.Controllers
             return NoContent();
         }
 
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: api/Candidate
         [HttpPost]
         public async Task<ActionResult<Candidate>> PostCandidate(Candidate candidate)
         {
+            
             _context.Candidate.Add(candidate);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCandidate", new { id = candidate.CandidateId }, candidate);
+            //return CreatedAtAction("GetCandidate", new { id = candidate.CandidateId }, candidate);
+            return CreatedAtAction(nameof(GetCandidate), new { id = candidate.CandidateId }, candidate);
         }
 
+        // DELETE: api/Candidate/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCandidate(int id)
         {
@@ -104,6 +137,6 @@ namespace Recruitment.WebAPI.Controllers
         private bool CandidateExists(int id)
         {
             return _context.Candidate.Any(e => e.CandidateId == id);
-        }*/
+        }
     }
 }
