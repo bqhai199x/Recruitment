@@ -47,8 +47,8 @@
                             <div class="form-group col-md-6">
                                 <label>Import CV</label>
                                 <div class="custom-file">
-                                    <input type="file" name="CV" class="custom-file-input" id="myInput" aria-describedby="myInput">
-                                    <label class="custom-file-label" for="myInput">Choose file</label>
+                                    <input asp-for="ProfileImage" class="custom-file-input" id="customFile">
+                                    <label class="custom-file-label" for="customFile">Choose file</label>
                                 </div>
                             </div>
 
@@ -134,150 +134,186 @@
             <th scope="col">Email</th>
             <th scope="col">Người giới thiệu</th>
             <th scope="col">CV</th>
+            <th scope="col">Hành động</th>
         </tr>
     </thead>
     <tbody id="lstCandi">
     </tbody>
 </table>
-<script>
 
-    var idtarget = 0;
-    //var ShowCV = function (candidateId) {
+@section scripts{
+    <script type="text/javascript">
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
 
-    //    var url = "/Approve/ShowCV?CandidateId=" + candidateId;
+        var idtarget = 0;
 
-    //    $("#myModalBodyDiv2").load(url, function () {
-    //        $("#myModal2").modal("show");
-    //    })
-    //}
-    var listCandi;
-    var html = "";
-    fetch("/api/candidate")
-        .then(response => response.json())
-        .then(data => {
-            listCandi = JSON.parse(JSON.stringify(data))
-            for (var i = 0; i < listCandi.length; i++) {
-                html += `<tr>
-                            <td>${listCandi[i].levelName}</td>
-                            <td>${listCandi[i].positionName}</td>
-                            <td>${listCandi[i].fullName}</td>
-                            <td>${listCandi[i].birthday}</td>
-                            <td>${listCandi[i].address}</td>
-                            <td>${listCandi[i].phone}</td>
-                            <td>${listCandi[i].email}</td>
-                            <td>${listCandi[i].introduceName == null ? "" : listCandi[i].introduceName}</td>
-                            <td>${listCandi[i].cv}</td>
-                            <td class="text-center">
-                                <button type="button" class="btn btn-success btn-sm" onclick="ShowModal(${listCandi[i].candidateId})">Sửa</button>&nbsp;
-                            <button type="button" class="btn btn-danger btn-sm" onclick="Delete(${listCandi[i].candidateId})">Xoá</button>
-                            </td>
-                        </tr>`
+        var listCandi;
+        var html = "";
+        fetch("/api/candidate")
+            .then(response => response.json())
+            .then(data => {
+                const tBody = document.getElementById('lstCandi');
+                tBody.innerHTML = '';
+                const button = document.createElement('button');
+                data.forEach(item => {
+                    let tr = tBody.insertRow();
+
+                    let td1 = tr.insertCell(0);
+                    let level = document.createTextNode(item.levelName);
+                    td1.appendChild(level);
+
+                    let td2 = tr.insertCell(1);
+                    let position = document.createTextNode(item.positionName);
+                    td2.appendChild(position);
+
+                    let td3 = tr.insertCell(2);
+                    let fullName = document.createTextNode(item.fullName);
+                    td3.appendChild(fullName);
+
+                    let td4 = tr.insertCell(3);
+                    let birthday = document.createTextNode(item.birthday);
+                    td4.appendChild(birthday);
+
+                    let td5 = tr.insertCell(4);
+                    let address = document.createTextNode(item.address);
+                    td5.appendChild(address);
+
+                    let td6 = tr.insertCell(5);
+                    let phone = document.createTextNode(item.phone);
+                    td6.appendChild(phone);
+
+                    let td7 = tr.insertCell(6);
+                    let email = document.createTextNode(item.email);
+                    td7.appendChild(email);
+
+                    let td8 = tr.insertCell(7);
+                    let introduce = document.createTextNode(item.introduceName == null ? "" : item.introduceName);
+                    td8.appendChild(introduce);
+
+                    let td9 = tr.insertCell(8);
+                    let cv = document.createTextNode(item.cv == null ? "" : item.cv);
+                    td9.appendChild(cv);
+
+                    let td10 = tr.insertCell(9);
+                    let editButton = button.cloneNode(false);
+                    editButton.innerText = 'Sửa';
+                    editButton.setAttribute('onclick', `ShowModal(${item.candidateId})`);
+                    editButton.setAttribute('class', 'btn btn-outline-success btn-sm mr-2');
+
+                    let deleteButton = button.cloneNode(false);
+                    deleteButton.innerText = 'Xoá';
+                    deleteButton.setAttribute('onclick', `Delete(${item.candidateId})`);
+                    deleteButton.setAttribute('class', 'btn btn-outline-danger btn-sm');
+
+                    td10.setAttribute('class', 'text-center');
+                    td10.appendChild(editButton);
+                    td10.appendChild(deleteButton);
+                })
+                listCandi = data;
+            })
+
+
+        fetch("/api/candidate/level")
+            .then(response => response.json())
+            .then(data => {
+                var lstLevel = JSON.parse(JSON.stringify(data))
+                $.each(lstLevel, function (key, value) {
+                    $('#level')
+                        .append($("<option></option>")
+                            .attr("value", key)
+                            .text(value.levelName));
+                });
+            })
+
+        fetch("/api/candidate/position")
+            .then(response => response.json())
+            .then(data => {
+                var lstPosition = JSON.parse(JSON.stringify(data))
+                $.each(lstPosition, function (key, value) {
+                    $('#position')
+                        .append($("<option></option>")
+                            .attr("value", key)
+                            .text(value.positionName));
+                });
+            })
+
+        function ShowModal(candidateId) {
+
+            if (candidateId != 0) {
+                const item = listCandi.find(item => item.candidateId == candidateId);
+
+                document.getElementById('fullname').value = item.fullName;
+                document.getElementById('introduce').value = item.introduceName;
+                document.getElementById('phone').value = item.phone;
+                document.getElementById('birthday').value = item.birthday;
+                document.getElementById('email').value = item.email;
+                document.getElementById('address').value = item.address;
+                document.getElementById('position').options.selectedIndex = item.positionId;
+                document.getElementById('level').options.selectedIndex = item.levelId;
+                //document.getElementById('myForm').addEventListener('submit', AddEdit(item.candidateId));
+                idtarget = item.candidateId;
             }
-            document.getElementById('lstCandi').innerHTML = html
-        })
 
-
-    fetch("/api/candidate/level")
-        .then(response => response.json())
-        .then(data => {
-            var lstLevel = JSON.parse(JSON.stringify(data))
-            $.each(lstLevel, function (key, value) {
-                $('#level')
-                    .append($("<option></option>")
-                        .attr("value", key)
-                        .text(value.levelName));
-            });
-        })
-
-    fetch("/api/candidate/position")
-        .then(response => response.json())
-        .then(data => {
-            var lstPosition = JSON.parse(JSON.stringify(data))
-            $.each(lstPosition, function (key, value) {
-                $('#position')
-                    .append($("<option></option>")
-                        .attr("value", key)
-                        .text(value.positionName));
-            });
-        })
-
-    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
-        var fileName = document.getElementById("myInput").files[0].name;
-        var nextSibling = e.target.nextElementSibling
-        nextSibling.innerText = fileName
-    })
-
-    function ShowModal(candidateId) {
-
-        if (candidateId != 0) {
-            const item = listCandi.find(item => item.candidateId === candidateId);
-
-            document.getElementById('fullname').value = item.fullName;
-            document.getElementById('introduce').value = item.introduceName;
-            document.getElementById('phone').value = item.phone;
-            document.getElementById('birthday').value = item.birthday;
-            document.getElementById('email').value = item.email;
-            document.getElementById('address').value = item.address;
-            document.getElementById('position').options.selectedIndex = item.positionId;
-            document.getElementById('level').options.selectedIndex = item.levelId;
-            //document.getElementById('myForm').addEventListener('submit', AddEdit(item.candidateId));
-            idtarget = item.candidateId;
+            $("#myModal1").modal("show");
         }
 
-        $("#myModal1").modal("show");
-    }
-
-    function Delete(candidateId) {
-        fetch(`api/candidate/${candidateId}`, {
-            method: 'DELETE'
-        })
-            .then(() => location.reload())
-            .catch(error => console.error('Unable to get items.', error));
-    }
-
-    function AddEdit() {
-        //var fileName = document.getElementById('myInput').files[0].name
-        var item = {
-            fullName: document.getElementById('fullname').value,
-            positionId: document.getElementById('position').selectedIndex,
-            levelId: document.getElementById('level').selectedIndex,
-            phone: document.getElementById('phone').value,
-            introduceName: document.getElementById('introduce').value,
-            birthday: document.getElementById('birthday').value,
-            email: document.getElementById('email').value,
-            address: document.getElementById('address').value,
-            //cv: fileName
-        };
-        if (idtarget == 0) {
-            fetch('/api/candidate', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(item)
+        function Delete(candidateId) {
+            fetch(`api/candidate/${candidateId}`, {
+                method: 'DELETE'
             })
-                .then(response => response.json())
-                .then(() => {
-                    location.reload(), idtarget = 0
-                })
+                .then(() => location.reload())
                 .catch(error => console.error('Unable to get items.', error));
         }
-        else {
-            item.candidateId = idtarget;
-            fetch(`api/candidate/${idtarget}`, {
-                method: 'PUT',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(item)
-            })
-                .then(() => {
-                    location.reload(), idtarget = 0
-                })
-                .catch(error => console.error('Unable to update item.', error));
-        }
-    }
 
-</script>
+        function AddEdit() {
+            //var fileName = document.getElementById('myInput').files[0].name
+            var item = {
+                fullName: document.getElementById('fullname').value,
+                positionId: document.getElementById('position').selectedIndex,
+                levelId: document.getElementById('level').selectedIndex,
+                phone: document.getElementById('phone').value,
+                introduceName: document.getElementById('introduce').value,
+                birthday: document.getElementById('birthday').value,
+                email: document.getElementById('email').value,
+                address: document.getElementById('address').value,
+                //cv: fileName
+            };
+            if (idtarget == 0) {
+                fetch('/api/candidate', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(item)
+                })
+                    .then(response => response.json())
+                    .then(() => {
+                        location.reload(), idtarget = 0
+                    })
+                    .catch(error => console.error('Unable to get items.', error));
+            }
+            else {
+                item.candidateId = idtarget;
+                fetch(`api/candidate/${idtarget}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(item)
+                })
+                    .then(() => {
+                        location.reload(), idtarget = 0
+                    })
+                    .catch(error => console.error('Unable to update item.', error));
+            }
+        }
+
+    </script>
+}
+

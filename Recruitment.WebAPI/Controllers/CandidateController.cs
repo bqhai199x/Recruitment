@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Recruitment.Core;
 using Recruitment.WebAPI.Data;
 using Recruitment.WebAPI.ViewModels;
 using System.Collections.Generic;
-using System.IO;
+using Microsoft.AspNetCore.Http;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,12 +16,18 @@ namespace Recruitment.WebAPI.Controllers
     public class CandidateController : ControllerBase
     {
         private readonly RecruitmentDbContext _context;
-        private readonly List<CandidateVM> listCandi;
-
-        public CandidateController(RecruitmentDbContext context)
+        private readonly IWebHostEnvironment webHostEnvironment;
+        public CandidateController(RecruitmentDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
-            listCandi = _context.Candidate
+            webHostEnvironment = hostEnvironment;
+        }
+
+        // GET: api/Candidate
+        [HttpGet]
+        public ActionResult<IEnumerable<CandidateVM>> GetCandidate()
+        {
+            var listCandi = _context.Candidate
                 .Select(x => new CandidateVM
                 {
                     CandidateId = x.CandidateId,
@@ -34,19 +41,8 @@ namespace Recruitment.WebAPI.Controllers
                     Phone = x.Phone,
                     Email = x.Email,
                     IntroduceName = x.IntroduceName,
-                    CV = x.CV,
                 })
                 .ToList();
-        }
-
-        // GET: api/Candidate
-        [HttpGet]
-        public ActionResult<IEnumerable<CandidateVM>> GetCandidate(string searchStr)
-        {
-            if (!string.IsNullOrEmpty(searchStr))
-            {
-                return listCandi.Where(x => x.FullName.Contains(searchStr)).ToList();
-            }
             return listCandi;
         }
 
@@ -66,6 +62,23 @@ namespace Recruitment.WebAPI.Controllers
         [HttpGet("{id}")]
         public ActionResult<CandidateVM> GetCandidate(int id)
         {
+            var listCandi = _context.Candidate
+                .Select(x => new CandidateVM
+                {
+                    CandidateId = x.CandidateId,
+                    LevelId = x.LevelId,
+                    LevelName = x.Level.LevelName,
+                    PositionId = x.PositionId,
+                    PositionName = x.Position.PositionName,
+                    FullName = x.FullName,
+                    Birthday = x.Birthday,
+                    Address = x.Address,
+                    Phone = x.Phone,
+                    Email = x.Email,
+                    IntroduceName = x.IntroduceName == null ? "" : x.IntroduceName,
+                    //CV = x.CV.ToString()
+                })
+                .ToList();
             var candidate = listCandi.Find(x => x.CandidateId == id);
 
             if (candidate == null)
@@ -108,10 +121,10 @@ namespace Recruitment.WebAPI.Controllers
 
         // POST: api/Candidate
         [HttpPost]
-        public async Task<ActionResult<Candidate>> PostCandidate(Candidate candidate)
+        public async Task<ActionResult<Candidate>> PostCandidate(Candidate candidate/*, IFormFile file*/)
         {
-            
             _context.Candidate.Add(candidate);
+
             await _context.SaveChangesAsync();
 
             //return CreatedAtAction("GetCandidate", new { id = candidate.CandidateId }, candidate);
